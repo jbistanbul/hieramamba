@@ -1,0 +1,8 @@
+# Core dependencies
+torch>=2.1.0
+torchvision>=0.15.0
+numpy>=1.21.0
+
+# Mamba dependencies
+mamba-ssm>=2.2.3
+

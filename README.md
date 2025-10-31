@@ -1,6 +1,6 @@
 # HieraMamba: Video Temporal Grounding via Hierarchical Anchor-Mamba Pooling
 
-[![arXiv](https://img.shields.io/badge/arXiv-2025-red.svg)](https://arxiv.org/abs/TBD)
+[![arXiv](https://img.shields.io/badge/arXiv-2025-red.svg)](https://arxiv.org/abs/2510.23043)
 [![Project Page](https://img.shields.io/badge/Project-Page-blue.svg)](https://vision.cs.utexas.edu/projects/hieramamba/)
 
 **Authors:** [Joungbin An](https://sites.google.com/view/joungbinan/), [Kristen Grauman](https://www.cs.utexas.edu/~grauman/)
@@ -67,7 +67,7 @@ pip install -r requirements.txt
 
 ## Model Checkpoints
 
-Pre-trained model checkpoints will be made available for each of the Long Video Temporal Grounding Datasets, including Ego4D-NLQ, MAD & MAD-v2, TACoS.
+Pre-trained model checkpoints will be made available for each of the Long Video Temporal Grounding Datasets, including Ego4D-NLQ, MAD & MAD-v2, and TACoS.
 
 ## Training
 Coming Soon
@@ -84,14 +84,13 @@ Coming Soon
 
 ## Citation
 
-If you find HieraMamba useful for your research and applications, please consider giving a star ⭐ and cite using this BibTeX:
+If you find HieraMamba useful for your research and applications, please consider giving a star ⭐ and citing it using this BibTeX:
 
 ```bibtex
-@misc{an2025hieramamba,
-    title={HieraMamba: Video Temporal Grounding via Hierarchical Anchor-Mamba Pooling},
-    url={https://vision.cs.utexas.edu/projects/hieramamba/},
-    author={An, Joungbin and Grauman, Kristen},
-    month={October},
-    year={2025}
+@article{an2025hieramamba,
+  title={HieraMamba: Video Temporal Grounding via Hierarchical Anchor-Mamba Pooling},
+  author={An, Joungbin and Grauman, Kristen},
+  journal={arXiv preprint arXiv:2510.23043},
+  year={2025}
 }
 ```

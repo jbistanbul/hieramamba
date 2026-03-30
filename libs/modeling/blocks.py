@@ -388,6 +388,18 @@ class MaskedMHA(nn.Module):
             bs = q.size(0)
 
         if self.window_size > 0:
+            # Get original sequence length before padding
+            orig_t = q.size(-1)
+            s = self.stride
+            
+            # Pad sequence to be divisible by stride if needed
+            pad_len = (s - orig_t % s) % s
+            if pad_len > 0:
+                q = F.pad(q, (0, pad_len))
+                k = F.pad(k, (0, pad_len))
+                v = F.pad(v, (0, pad_len))
+                kv_mask = F.pad(kv_mask, (0, pad_len), value=False)
+            
             q = q.view(bs, h, d, -1).flatten(0, 1).transpose(1, 2)
             k = k.view(bs, h, d, -1).flatten(0, 1).transpose(1, 2)
             v = v.view(bs, h, d, -1).flatten(0, 1).transpose(1, 2)
@@ -404,6 +416,10 @@ class MaskedMHA(nn.Module):
             # attention-weighted sum of values: # (bs * h, t, d)
             q = self._attn_value_matmul(attn, v)
             q = q.view(bs, h, -1, d)
+            
+            # Remove padding if it was added
+            if pad_len > 0:
+                q = q[:, :, :orig_t, :]
         else:
             q = q.view(bs, h, d, -1).transpose(2, 3)
             k = k.view(bs, h, d, -1)

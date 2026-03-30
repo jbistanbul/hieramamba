@@ -1,0 +1,155 @@
+model_net: 
+  name: hieramamba
+
+meta:
+  trainer_type: TrainerAuxiliary
+  evaluator_type: EvaluatorAuxiliary
+
+model:
+  early_fusion: true
+  text_net:
+    name: identity        # identity | transformer
+    in_dim: 512           # input dimension
+    embd_dim: 512         # embedding dimension
+    n_heads: 4            # number of attention heads
+    max_seq_len: 75       # max number of tokens in text query
+    use_abs_pe: false     # whether to use absolute position encoding
+    use_bkgd_token: true  # whether to add background token
+    
+  vid_net:
+    name: hieramamba_backbone
+    in_dim: 512           # input dimension
+    embd_dim: 512         # embedding dimension
+    n_heads: 4            # number of attention heads
+    max_seq_len: 4096     # max number of clips in video
+    stride: 2             # input stride
+    arch: [2, 0, 9]       # backbone architecture (embed | stem | branch)
+    pool_method: 'mean'   # 'mean' | 'max' | 'attn' pooling method for anchor tokens
+    block_type: 'AnchorMambaPoolingBlockGated'  # AnchorMambaPoolingBlock| AnchorMambaPoolingBlockGated
+    ffn_ratio: 2    
+    return_anchor: true
+    local_encode: true
+    local_encoder_type: 'transformer'  # 'transformer'
+    local_window_size: 5 # window size for local self-attention
+    local_encode_num_layers: 0 # local encoder layers, 0 means all layers
+    mamba_headdim: 64
+    mamba_dstate: 64 
+    mamba_expand: 2
+    mamba_dconv: 7
+
+  fusion:
+    name: xattn
+    n_layers: 2           # number of fusion layers
+    n_heads: 4            # number of attention heads
+    attn_pdrop: 0.0       # dropout rate for attention map
+    proj_pdrop: 0.1       # dropout rate for projection
+    path_pdrop: 0.1       # dropout rate for residual path
+    xattn_mode: adaln     # cross-attention mode
+    
+  cls_head:
+    name: cls
+    n_layers: 2           # number of conv layers (output layer excluded)
+    prior_prob: 0.0       # prior probability for positive class
+
+  reg_head:
+    name: reg
+    n_layers: 2           # number of conv layers (output layer excluded)
+
+pt_gen:
+  regression_range: 4     # normalized regression range
+  sigma: 0.5              # controls overlap of regression ranges (1 for no overlap)
+
+train:
+  data:
+    name: video_centric
+    split: train
+    anno_file: ./data/mad/annotations/mad.json
+    vid_feat_dir: ./data/mad/video/
+    text_feat_dir: ./data/mad/text/
+    ext_score_dir: null
+
+    clip_size: 1
+    clip_stride: 1
+    downsample_rate: 1      # downsampling stride for video features
+    to_fixed_len: false     # whether to resize video to fixed length
+    crop_ratio: [0.9, 1.0]  # crop ratio for video features
+    max_num_text: 16
+
+  batch_size: 2
+  microbatch_size: 1
+  num_workers: 4
+
+  epochs: 3
+  warmup_epochs: 5
+  ema_beta: 0.999
+
+  center_sampling: radius
+  center_sampling_radius: 1.5
+
+  loss_norm: 250
+  loss_weight: 1.0
+  reg_loss: diou           # iou | diou
+  loss_aux:
+    ds_contrast:
+      enable: false
+      contr_type: contr_mp
+      weight: 1.0
+      radius: 0
+      neg_ratio: 4
+      gap_ratio: 0.2
+      temperature: 0.07
+      proj_outdim: 256
+      proj_expand: 1.0
+      proj_num_layers: 2
+      hard_neg: false
+      cross_video_neg: false
+    gt_contrast:
+      enable: false
+      type: gt_point_contrastive
+      contr_type: point_gt_contr_pooled
+      weight: 150.0
+      neg_ratio: 1.0
+      temperature: 0.07
+      use_projector: true
+      proj_expand: 1.0
+      proj_outdim: 256
+      proj_num_layers: 2
+      span_radius: 1.5
+  optimizer:
+    name: adamw
+    lr: 1.e-4
+    text_net_lr: 1.e-4
+    weight_decay: 0.05
+  clip_grad_norm: 1.0
+
+  scheduler:
+    name: multistep       # cosine | multistep
+    steps: [-1]
+    
+eval:
+  data:
+    name: video_centric
+    split: test
+  
+  max_vid_len: 32768
+
+  ranks: [1, 5, 10, 50]
+  iou_threshs: [0.1, 0.3, 0.5]
+
+  pre_nms_topk: 200
+  pre_nms_thresh: 0.001
+  seg_len_thresh: 0.1
+  max_text_len: 75
+  batchify_text_queries: false
+  
+  nms:
+    mode: soft_nms
+    iou_thresh: 0.1
+    min_score: 0.001
+    max_num_segs: 50
+    sigma: 0.9
+    voting_thresh: 0.95
+
+log:
+  log_interval: 100
+  checkpoint_epochs: [-1]

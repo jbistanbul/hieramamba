@@ -43,10 +43,10 @@ Pre-trained model checkpoints are available as zipped experiment folders for eac
 
 | Dataset | Config | Checkpoint |
 |---------|--------|------------|
-| Ego4D-NLQ | `opts/ego4d_hieramamba.yaml` | [Download](https://utexas.box.com/s/swst3gnjjtfo9u0vk6jg6d6o671v2k5v) |
-| MAD | `opts/mad_hieramamba.yaml` | [Download](https://utexas.box.com/s/gwf94b1a37xh6or1c0964x5znczz6k9d) |
-| MAD-v2 | `opts/madv2_hieramamba.yaml` | [Download](https://utexas.box.com/s/2cdwfulel0oskycrpcfbmumltnjlxl9i) |
-| TACoS | `opts/tacos_hieramamba.yaml` | [Download](https://utexas.box.com/s/469c76bxhrbb0l0rikd6ry6y6bi22buk) |
+| Ego4D-NLQ | `opts/ego4d_hieramamba.yaml` | [Download](https://utexas.box.com/shared/static/69bfc16fhjz6md4fy2umajnxntfg33t2.zip) |
+| MAD | `opts/mad_hieramamba.yaml` | [Download](https://utexas.box.com/s/mggsogfwhbs0tbpmc1toqwjp75cv1thj) |
+| MAD-v2 | `opts/madv2_hieramamba.yaml` | [Download](https://utexas.box.com/s/8vxbzflegufehnd9oclhohmfjwodizbr) |
+| TACoS | `opts/tacos_hieramamba.yaml` | [Download](https://utexas.box.com/s/bijsnkzfofx6hl2ecwwymjq6z3bzj4ri) |
 
 Each checkpoint is a zipped experiment folder containing the model weights (`models/`), saved config (`opt.yaml`), and training states. To use a checkpoint, unzip it into the `experiments/` directory and run evaluation:
 
@@ -114,7 +114,7 @@ The released configs expect dataset assets under `./data/` with the following st
 
 ### Annotations
 
-Download the preprocessed annotation files for all datasets [here](https://utexas.box.com/s/5ymi257fh14u8530qvxr05tf1f499j3p) and place them under `./data/` following the directory structure below.
+Download the preprocessed annotation files for all datasets [here](https://utexas.box.com/s/dzkrj04arzb7ra83gidsymjkdrdux7ez) and place them under `./data/` following the directory structure below.
 
 ### Features
 
@@ -171,7 +171,7 @@ data/
     c3d_features/
 ```
 
-For TACoS, text is tokenized on the fly with GloVe. Download [`glove.6B.300d.txt`](https://utexas.box.com/s/3mckvxrpu5kbavgn46f6c9gj04i63nse) and place it at the repository root:
+For TACoS, text is tokenized on the fly with GloVe. Download [`glove.6B.300d.txt`](https://utexas.box.com/s/x36orthzwqeydd7h852z31gj9e434lxs) and place it at the repository root:
 
 ```text
 glove.6B.300d.txt
